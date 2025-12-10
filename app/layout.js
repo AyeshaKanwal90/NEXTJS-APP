@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ThemeRegistry from "./ThemeRegistery";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <ThemeRegistry>
+          {children}
+        </ThemeRegistry>
+        <script
+  src="https://accounts.google.com/gsi/client"
+  async
+  defer
+></script>
       </body>
     </html>
   );

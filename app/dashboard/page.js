@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   Box,
   Container,
@@ -21,7 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter, useSearchParams } from "next/navigation";
 import MapComponent from "@/components/MapComponent";
 
-export default function Dashboard() {
+function DashboardContent() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const router = useRouter();
@@ -193,5 +193,17 @@ export default function Dashboard() {
         </Box>
       </Paper>
     </Container>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <Container maxWidth="md" sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Container>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }

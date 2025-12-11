@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import {
   Box,
   Grid,
@@ -14,7 +14,8 @@ import {
   Checkbox,
   Divider,
   Stack,
-  Link
+  Link,
+  CircularProgress
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -23,7 +24,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Alert } from "@mui/material";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
-export default function Register() {
+function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -278,5 +279,17 @@ export default function Register() {
         </Grid>
       </Grid>
     </Container>
+  );
+}
+
+export default function Register() {
+  return (
+    <Suspense fallback={
+      <Container sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>
+        <CircularProgress />
+      </Container>
+    }>
+      <RegisterContent />
+    </Suspense>
   );
 }

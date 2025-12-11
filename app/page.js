@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Box,
   Grid,
@@ -16,7 +16,8 @@ import {
   Divider,
   Stack,
   Link,
-  Alert
+  Alert,
+  CircularProgress
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -24,7 +25,7 @@ import { FaFacebookF, FaGoogle, FaApple } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
-export default function Login() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -235,5 +236,17 @@ export default function Login() {
         </Grid>
       </Grid>
     </Container>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={
+      <Container sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>
+        <CircularProgress />
+      </Container>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

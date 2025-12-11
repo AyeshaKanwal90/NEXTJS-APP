@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Box,
   Button,
@@ -9,13 +9,14 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  CircularProgress
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function VerifyCode() {
+function VerifyCodeContent() {
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
   const [showCode, setShowCode] = useState(false);
@@ -60,20 +61,22 @@ export default function VerifyCode() {
 
   return (
     <Container maxWidth="xl" disableGutters
-      sx={{ width:"100%", height:"100vh", display:"flex",
-        justifyContent:"center", alignItems:"center", px:2 }}
+      sx={{
+        width: "100%", height: "100vh", display: "flex",
+        justifyContent: "center", alignItems: "center", px: 2
+      }}
     >
       <Box sx={{
-        display:"flex", flexDirection:{xs:"column-reverse", md:"row"},
+        display: "flex", flexDirection: { xs: "column-reverse", md: "row" },
         gap: 8,
-        width:"100%", maxWidth:1000
+        width: "100%", maxWidth: 1000
       }}>
 
         {/* LEFT */}
-        <Box sx={{ width:"100%", maxWidth:480, pr:{md:4},  mt: 9}}>
+        <Box sx={{ width: "100%", maxWidth: 480, pr: { md: 4 }, mt: 9 }}>
           <Button startIcon={<ArrowBackIcon />}
             onClick={() => router.push("/forgot-password")}
-            sx={{ mb:2 }}
+            sx={{ mb: 2 }}
           >
             Back to login
           </Button>
@@ -83,7 +86,7 @@ export default function VerifyCode() {
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-           <b> An authentication code has been sent to your email.</b>
+            <b> An authentication code has been sent to your email.</b>
           </Typography>
 
           <TextField
@@ -110,12 +113,12 @@ export default function VerifyCode() {
             </Typography>
           )}
 
-          <Button 
-            variant="contained" 
-            fullWidth 
-            onClick={handleVerify} 
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleVerify}
             disabled={loading || code.length !== 6}
-            sx={{ height:45 }}
+            sx={{ height: 45 }}
           >
             {loading ? "Verifying..." : "Verify"}
           </Button>
@@ -125,9 +128,21 @@ export default function VerifyCode() {
         <Box
           component="img"
           src="/assets/usertask-login.png"
-          sx={{ width:{xs:"80%", md:"50%"}, maxWidth:420 }}
+          sx={{ width: { xs: "80%", md: "50%" }, maxWidth: 420 }}
         />
       </Box>
     </Container>
+  );
+}
+
+export default function VerifyCode() {
+  return (
+    <Suspense fallback={
+      <Container sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>
+        <CircularProgress />
+      </Container>
+    }>
+      <VerifyCodeContent />
+    </Suspense>
   );
 }

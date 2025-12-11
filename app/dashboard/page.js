@@ -12,36 +12,64 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  Stack
+  Stack,
+  CircularProgress
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useRouter } from "next/navigation";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter, useSearchParams } from "next/navigation";
+import MapComponent from "@/components/MapComponent";
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/");
-    } else {
-      fetchTasks();
+    const urlToken = searchParams.get("token");
+    let token = localStorage.getItem("token");
+
+    if (urlToken) {
+      localStorage.setItem("token", urlToken);
+      token = urlToken;
+
+      window.history.replaceState({}, document.title, "/dashboard");
     }
-    
-  }, []);
+
+    if (!token) {
+      setLoading(false);
+    } else {
+      setIsAuthenticated(true);
+      fetchTasks();
+      setLoading(false);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      const timer = setTimeout(() => {
+        router.push("/");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, isAuthenticated, router]);
 
   const fetchTasks = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return router.push("/");
+    if (!token) return;
 
-    const res = await fetch("/api/tasks", {
-      headers: { authorization: token }
-    }).then(r => r.json());
-
-    setTasks(res || []);
+    try {
+      const res = await fetch("/api/tasks", {
+        headers: { authorization: token }
+      }).then(r => r.json());
+      setTasks(res || []);
+    } catch (e) {
+      console.error("Failed to fetch tasks");
+    }
   };
 
   const addTask = async () => {
@@ -80,9 +108,42 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  if (loading) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Container maxWidth="sm" sx={{ mt: 8, textAlign: "center" }}>
+        <Paper sx={{ p: 4 }}>
+          <Typography variant="h5" color="error" gutterBottom>
+            Authentication Failed or Session Expired
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            Please log in again to access your dashboard.
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Redirecting to login...
+          </Typography>
+        </Paper>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="md" sx={{ mt: 8 }}>
       <Paper sx={{ p: 3 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={logout}
+          sx={{ mb: 2 }}
+        >
+          Back to login
+        </Button>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>
             Your Tasks
@@ -123,6 +184,13 @@ export default function Dashboard() {
             ))}
           </List>
         </Paper>
+
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Your Location
+          </Typography>
+          <MapComponent />
+        </Box>
       </Paper>
     </Container>
   );

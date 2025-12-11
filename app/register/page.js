@@ -19,11 +19,13 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { FaFacebookF, FaGoogle, FaApple } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Alert } from "@mui/material";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 export default function Register() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
 
   const [firstName, setFirstName] = useState("");
@@ -34,14 +36,14 @@ export default function Register() {
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [agree, setAgree] = useState(false);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const submit = async () => {
     if (password !== confirm) {
-      alert("Passwords do not match"); 
+      alert("Passwords do not match");
       return;
     }
-    
+
     setLoading(true);
 
     try {
@@ -52,21 +54,21 @@ export default function Register() {
       });
 
       if (res.ok) {
-     
-        alert("Success! Your account has been created."); 
-        
+
+        alert("Success! Your account has been created.");
+
         router.push("/");
       } else {
-      
+
         const errorData = await res.json();
         const errorMessage = errorData.message || 'Registration failed due to a server error.';
-        alert(errorMessage); 
-       
+        alert(errorMessage);
+
       }
     } catch (error) {
       // Handle network errors
       alert("Network error: Could not connect to the server.");
-      
+
     } finally {
       setLoading(false);
     }
@@ -100,7 +102,7 @@ export default function Register() {
       >
         {/* LEFT — Illustration*/}
         <Grid item xs={12} md={6}>
-        
+
           <Box
             component="img"
             src="/assets/usertask-signup.png"
@@ -130,97 +132,97 @@ export default function Register() {
             <Grid container spacing={2}>
               {/* FIRST NAME */}
               <Grid item xs={12} sm={6}>
-                <TextField 
-                  fullWidth 
-                  size="small" 
-                  label="First Name" 
-                  value={firstName} 
-                  onChange={(e) => setFirstName(e.target.value)} 
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
               </Grid>
 
               {/* LAST NAME */}
               <Grid item xs={12} sm={6}>
-                <TextField 
-                  fullWidth 
-                  size="small" 
-                  label="Last Name" 
-                  value={lastName} 
-                  onChange={(e) => setLastName(e.target.value)} 
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
 
               {/* EMAIL */}
               <Grid item xs={12} sm={6}>
-                <TextField 
-                  fullWidth 
-                  size="small" 
-                  label="Email" 
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Email"
                   type="email"
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
 
               {/* PHONE */}
               <Grid item xs={12} sm={6}>
-                <TextField 
-                  fullWidth 
-                  size="small" 
-                  label="Phone Number" 
-                  value={phone} 
-                  onChange={(e) => setPhone(e.target.value)} 
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Phone Number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </Grid>
 
               {/* PASSWORD */}
-              
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword(s => !s)}>
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-          
+
+              <TextField
+                fullWidth
+                size="small"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(s => !s)}>
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
 
-              
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Confirm Password"
-                  type={showPassword ? "text" : "password"}
-                  value={confirm} 
-                  onChange={(e) => setConfirm(e.target.value)} 
-                  error={password !== confirm && confirm.length > 0} 
-                  helperText={password !== confirm && confirm.length > 0 ? "Passwords do not match" : ""}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword(s => !s)}>
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              
+
+
+              <TextField
+                fullWidth
+                size="small"
+                label="Confirm Password"
+                type={showPassword ? "text" : "password"}
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                error={password !== confirm && confirm.length > 0}
+                helperText={password !== confirm && confirm.length > 0 ? "Passwords do not match" : ""}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(s => !s)}>
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
 
               {/* TERMS */}
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)} />} 
+                  control={<Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)} />}
                   label={
                     <Typography variant="body2">
                       I agree to the <Link>Terms</Link> and <Link>Privacy Policies</Link>
@@ -230,39 +232,44 @@ export default function Register() {
               </Grid>
 
               {/* BUTTON */}
-             
-                <Button 
-                  variant="contained" 
-                  fullWidth 
-                  size="large"
-                  onClick={submit} 
-                  disabled={!agree || loading} 
-                >
-                  {loading ? 'Creating Account...' : 'Create account'}
-                </Button>
-             
+
+              <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={submit}
+                disabled={!agree || loading}
+              >
+                {loading ? 'Creating Account...' : 'Create account'}
+              </Button>
+
 
               {/* Login Link */}
-             
-                <Typography variant="body2" sx={{ textAlign: "center", width: "100%" }}>
-                  Already have an account?{" "}
-                  <Link component="button" onClick={() => router.push("/")} underline="none">
-                    Login
-                  </Link>
-                </Typography>
-             
 
-                <Divider sx={{ width: "100%", maxWidth: 300, margin: "0 auto" }}>
-                  Or Sign up with
-                </Divider>
-            
+              <Typography variant="body2" sx={{ textAlign: "center", width: "100%" }}>
+                Already have an account?{" "}
+                <Link component="button" onClick={() => router.push("/")} underline="none">
+                  Login
+                </Link>
+              </Typography>
 
-              {/* SOCIAL BUTTONS */}
-           
-                <Grid item xs={12}>
+
+              <Divider sx={{ width: "100%", maxWidth: 300, margin: "0 auto" }}>
+                Or Sign up with
+              </Divider>
+
+
+              {/* Google Auth Error Alert */}
+              {searchParams.get("error") === "account_not_found" && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  Account not found. Please sign up here to create a new account.
+                </Alert>
+              )}
+
+              <Grid item xs={12}>
                 <Stack direction="row" spacing={2} justifyContent="center">
                   <Button variant="outlined" startIcon={<FaFacebookF />} sx={{ minWidth: 145 }} />
-                  <GoogleLoginButton />
+                  <GoogleLoginButton mode="register" />
                   <Button variant="outlined" startIcon={<FaApple />} sx={{ minWidth: 145 }} />
                 </Stack>
               </Grid>

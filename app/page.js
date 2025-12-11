@@ -123,14 +123,14 @@ export default function Login() {
               Login to access your travelwise account
             </Typography>
 
-         
+
             {resetSuccess && (
               <Alert severity="success" sx={{ mb: 2 }}>
                 Your password has been successfully reset. Please login with your new password.
               </Alert>
             )}
 
-           
+
             {errorMessage && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {errorMessage}
@@ -179,7 +179,7 @@ export default function Login() {
                 </Link>
               </Box>
 
-           
+
               <Button
                 variant="contained"
                 fullWidth
@@ -200,8 +200,8 @@ export default function Login() {
 
               <Stack direction="row" spacing={2} justifyContent="center">
                 <Button variant="outlined" size="large" startIcon={<FaFacebookF />} sx={{ minWidth: 120 }}></Button>
-                
-                  <GoogleLoginButton />
+
+                <GoogleLoginButton mode="login" />
                 <Button variant="outlined" size="large" startIcon={<FaApple />} sx={{ minWidth: 120 }}></Button>
               </Stack>
             </Stack>

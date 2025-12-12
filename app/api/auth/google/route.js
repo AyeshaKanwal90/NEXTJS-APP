@@ -7,7 +7,8 @@ import { OAuth2Client } from "google-auth-library";
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(clientId);
 
-const redirectUri = "http://localhost:3000/api/auth/google/callback";
+const redirectUri = process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/api/auth/google/callback";
+
 
 export async function GET(req) {
   try {

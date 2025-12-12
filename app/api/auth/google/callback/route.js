@@ -6,7 +6,8 @@ import { OAuth2Client } from "google-auth-library";
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_AUTH_SECRET;
-const redirectUri = "http://localhost:3000/api/auth/google/callback";
+const redirectUri = process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/api/auth/google/callback";
+
 
 const client = new OAuth2Client(clientId, clientSecret, redirectUri);
 
@@ -35,7 +36,7 @@ export async function GET(req) {
       );
     }
 
-  
+
     const { tokens } = await client.getToken(code);
     client.setCredentials(tokens);
 

@@ -7,7 +7,7 @@ import { OAuth2Client } from "google-auth-library";
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(clientId);
 
-const redirectUri = process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/api/auth/google/callback";
+
 
 
 export async function GET(req) {
@@ -15,6 +15,9 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const mode = searchParams.get("mode") || "login";
 
+    // Dynamic Base URL: Use NEXTAUTH_URL if set (production), otherwise fallback to request origin (localhost)
+    const baseUrl = process.env.NEXTAUTH_URL || new URL(req.url).origin;
+    const redirectUri = `${baseUrl}/api/auth/google/callback`;
 
     const state = JSON.stringify({ mode });
 
